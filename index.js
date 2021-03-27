@@ -17,12 +17,6 @@ const imageUrls = ['player.png', 'background.jpg']
 const images = []
 let imgCount = 0
 
-const playGame = () => {
-    // draw background and then foreground
-    c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
-    c.drawImage(images[0], 0, 0)
-}
-
 imageUrls.forEach(src => {
     const image = new Image()
     image.src = `./img/${src}`
@@ -36,4 +30,24 @@ imageUrls.forEach(src => {
     }
     images.push(image)
 })
+
+class Player {
+    constructor(x, y) {
+        this.x = x
+        this.y = y
+    }
+
+    draw() {
+        c.drawImage(images[0], this.x, this.y)
+    }
+}
+
+const player = new Player(0, 0)
+
+// images have loaded, can start drawing them to canvas
+const playGame = () => {
+    // draw background
+    c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
+    player.draw()
+}
 
