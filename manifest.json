@@ -9,5 +9,6 @@
             "src": "./img/icons/icon.png",
             "type": "image/png", "sizes": "256x256"
         }
-    ]
+    ],
+    "offline_enabled": "true"
 }
