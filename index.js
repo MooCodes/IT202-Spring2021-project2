@@ -34,6 +34,7 @@ class Player {
         this.maxSpeed = maxSpeed
         this.friction = friction
         this.lives = 3
+        this.score = 0
     }
 
     draw() {
@@ -78,8 +79,8 @@ class Enemy {
     constructor(x, y, velocity, maxSpeed) {
         this.x = x
         this.y = y
-        this.width = 24
-        this.height = 18
+        this.width = 32
+        this.height = 32
         this.velocity = velocity
         this.maxSpeed = maxSpeed
     }
@@ -94,7 +95,6 @@ class Enemy {
 
         this.x += this.velocity
     }
-
 }
 
 const player = new Player(32, (canvas.height / 2) - 32, 0, 6, 0.90)
@@ -120,6 +120,9 @@ const animate = () => {
     animationId = requestAnimationFrame(animate)
     // draw background
     c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
+    // draw score
+    c.font = "32px Arial"
+    c.strokeText("Lives: " + player.lives, 10, 30)
     // draw player
     player.draw()
     player.update()
@@ -137,13 +140,16 @@ const animate = () => {
                 }, 0)
 
             player.lives--
-            if (player.lives === 0)
+            if (player.lives === 0) {
+                c.font = "64px Arial Bold"
+                c.strokeText("GAME OVER", canvas.width / 2 - 150, canvas.height / 2)
                 cancelAnimationFrame(animationId)
+            }
         }
     })
 }
 
-let checkCollision = (x1, y1, w1, h1, x2, y2, w2, h2) => {
+const checkCollision = (x1, y1, w1, h1, x2, y2, w2, h2) => {
     if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
         return false;
     }
