@@ -99,9 +99,10 @@ class Enemy {
 const player = new Player(32, (canvas.height / 2) - 32, 0, 6, 0.90)
 const enemies = []
 
+let spawnEnemyInterval
 const spawnEnemies = () => {
     // every second, spawn a new enemy virus
-    setInterval(() => {
+    spawnEnemyInterval = setInterval(() => {
         enemies.push(new Enemy(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, 10))
     }, 1000)
 }
@@ -113,8 +114,9 @@ const playGame = () => {
 }
 
 // where we draw and update our game objects
+let animationId
 const animate = () => {
-    requestAnimationFrame(animate)
+    animationId = requestAnimationFrame(animate)
     // draw background
     c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
     // draw player
@@ -124,7 +126,22 @@ const animate = () => {
     enemies.forEach(enemy => {
         enemy.draw()
         enemy.update()
+
+        // check if the enemy has collided with the player
+        if (checkCollision(player.x, player.y, player.width, player.height,
+            enemy.x, enemy.y, enemy.width, enemy.height)) {
+            
+                console.log('collision detected!')
+                cancelAnimationFrame(animationId)
+        }
     })
+}
+
+let checkCollision = (x1, y1, w1, h1, x2, y2, w2, h2) => {
+    if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
+        return false;
+    }
+    return true;
 }
 
 // logic for knowing when a certain key is pressed/released
