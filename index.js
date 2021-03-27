@@ -251,7 +251,7 @@ function getRandomNum(min, max) {
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
         navigator.serviceWorker
-            .register("/IT202-Spring2021-project2/serviceWorker.js")
+            .register("./serviceWorker.js")
             .then(res => console.log("service worker registered"))
             .catch(err => console.log("service worker not registered", err));
     });
