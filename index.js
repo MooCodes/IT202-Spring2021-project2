@@ -5,8 +5,6 @@ const c = canvas.getContext('2d')
 canvas.width = innerWidth / 2
 canvas.height = innerHeight / 2
 
-console.log(canvas.width, canvas.height)
-
 // define & load in our game images
 const imageUrls = ['player.png', 'background.jpg']
 const images = []
@@ -40,21 +38,34 @@ class Player {
     }
 
     update() {
+        this.move()
+    }
+
+    move() {
+        // if user hit 'a' or '<--' keys
         if (keys[37] || keys[65]) {
             // move left
             if (this.velocity > -this.maxSpeed)
                 this.velocity--
         }
 
+        // if user hit 'd' or '-->' keys
         if (keys[39] || keys[68]) {
             // move right
             if (this.velocity < this.maxSpeed)
                 this.velocity++
         }
 
-        // add a smoothing effect to when we are stopping
+        // add a smoothing effect overtime for when we are stopping
         this.velocity *= this.friction
         this.y += this.velocity
+
+        // add bounds to movement
+        if (this.y <= 0) {
+            this.y = 0
+        } else if (this.y >= canvas.height - 32) {
+            this.y = canvas.height - 32
+        }
     }
 }
 
