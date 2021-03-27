@@ -33,6 +33,7 @@ class Player {
         this.velocity = velocity
         this.maxSpeed = maxSpeed
         this.friction = friction
+        this.lives = 3
     }
 
     draw() {
@@ -123,15 +124,20 @@ const animate = () => {
     player.draw()
     player.update()
 
-    enemies.forEach(enemy => {
+    enemies.forEach((enemy, index) => {
         enemy.draw()
         enemy.update()
 
         // check if the enemy has collided with the player
         if (checkCollision(player.x, player.y, player.width, player.height,
             enemy.x, enemy.y, enemy.width, enemy.height)) {
-            
-                console.log('collision detected!')
+            console.log('collision detected! remove enemy')
+                setTimeout(() => {
+                    enemies.splice(index, 1)
+                }, 0)
+
+            player.lives--
+            if (player.lives === 0)
                 cancelAnimationFrame(animationId)
         }
     })
