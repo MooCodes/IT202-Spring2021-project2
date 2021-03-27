@@ -40,10 +40,10 @@ class Player {
     }
 
     update() {
-        this.move()
+        this.moveUpOrDown()
     }
 
-    move() {
+    moveUpOrDown() {
         // if user hit 'a' or '<--' keys
         if (keys[37] || keys[65]) {
             // move left
@@ -73,14 +73,43 @@ class Player {
     }
 }
 
-// create the player obj
-let speed = 4
-let friction = 0.90
-const player = new Player(32, (canvas.height / 2) - 32, 0, speed, friction)
+class Enemy {
+    constructor(x, y, velocity, maxSpeed) {
+        this.x = x
+        this.y = y
+        this.width = 24
+        this.height = 18
+        this.velocity = velocity
+        this.maxSpeed = maxSpeed
+    }
+
+    draw() {
+        c.drawImage(images[2], this.x, this.y)
+    }
+
+    update() {
+        if (this.velocity > -this.maxSpeed)
+            this.velocity--
+
+        this.x += this.velocity
+    }
+
+}
+
+const player = new Player(32, (canvas.height / 2) - 32, 0, 6, 0.90)
+const enemies = []
+
+const spawnEnemies = () => {
+    // every second, spawn a new enemy virus
+    setInterval(() => {
+        enemies.push(new Enemy(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, 10))
+    }, 1000)
+}
 
 // images have loaded, can start with game logic
 const playGame = () => {
     animate()
+    spawnEnemies()
 }
 
 // where we draw and update our game objects
@@ -92,7 +121,10 @@ const animate = () => {
     player.draw()
     player.update()
 
-    c.drawImage(images[2], 100, 100)
+    enemies.forEach(enemy => {
+        enemy.draw()
+        enemy.update()
+    })
 }
 
 // logic for knowing when a certain key is pressed/released
@@ -105,4 +137,6 @@ document.body.addEventListener('keyup', (e) => {
     keys[e.keyCode] = false
 })
 
-// ram 24px width 18 height
+function getRandomNum(min, max) {
+    return Math.random() * (max - min) + min;
+}
