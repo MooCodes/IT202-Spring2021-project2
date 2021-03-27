@@ -7,12 +7,7 @@ canvas.height = innerHeight / 2
 
 console.log(canvas.width, canvas.height)
 
-// Define & load in our game images
-const playerImg = new Image()
-playerImg.src = './img/player.png'
-const bgImg = new Image()
-bgImg.src = './img/background.jpg'
-
+// define & load in our game images
 const imageUrls = ['player.png', 'background.jpg']
 const images = []
 let imgCount = 0
@@ -32,22 +27,62 @@ imageUrls.forEach(src => {
 })
 
 class Player {
-    constructor(x, y) {
+    constructor(x, y, velocity, maxSpeed, friction) {
         this.x = x
         this.y = y
+        this.velocity = velocity
+        this.maxSpeed = maxSpeed
+        this.friction = friction
     }
 
     draw() {
         c.drawImage(images[0], this.x, this.y)
     }
+
+    update() {
+        if (keys[37] || keys[65]) {
+            // move left
+            if (this.velocity > -this.maxSpeed)
+                this.velocity--
+        }
+
+        if (keys[39] || keys[68]) {
+            // move right
+            if (this.velocity < this.maxSpeed)
+                this.velocity++
+        }
+
+        // add a smoothing effect to when we are stopping
+        this.velocity *= this.friction
+        this.y += this.velocity
+    }
 }
 
-const player = new Player(0, 0)
+let speed = 4
+let friction = 0.90
+const player = new Player(32, (canvas.height / 2) - 32, 0, speed, friction)
 
-// images have loaded, can start drawing them to canvas
+// images have loaded, can start with game logic
 const playGame = () => {
+    animate()
+}
+
+// where we draw and update our game objects
+const animate = () => {
+    requestAnimationFrame(animate)
     // draw background
     c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
+    // draw player
     player.draw()
+    player.update()
 }
 
+// logic for knowing when a certain key is pressed/released
+// with using just an array indexed by keycode
+let keys = []
+document.body.addEventListener('keydown', (e) => {
+    keys[e.keyCode] = true
+})
+document.body.addEventListener('keyup', (e) => {
+    keys[e.keyCode] = false
+})
