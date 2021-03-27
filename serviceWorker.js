@@ -1,12 +1,12 @@
 const cacheName = "ali-baig-it202-project2"
 const assets = [
-    "/",
-    "/index.html",
-    "/index.js",
-    "/img/background.jpg",
-    "/img/benefit.png",
-    "/img/enemy.png",
-    "/img/player.png"
+    "./",
+    "./index.html",
+    "./index.js",
+    "./img/background.jpg",
+    "./img/benefit.png",
+    "./img/enemy.png",
+    "./img/player.png"
 ]
 
 self.addEventListener("install", installEvent => {
