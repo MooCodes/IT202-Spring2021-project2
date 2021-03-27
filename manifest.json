@@ -6,7 +6,7 @@
     "theme_color": "#db4938",
     "icons": [
         {
-            "src": "IT202-Spring2021-project2/img/icons/icon.png",
+            "src": "/img/icons/icon.png",
             "type": "image/png", "sizes": "256x256"
         }
     ]
