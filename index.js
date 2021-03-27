@@ -6,7 +6,7 @@ canvas.width = innerWidth / 2
 canvas.height = innerHeight / 2
 
 // define & load in our game images
-const imageUrls = ['player.png', 'background.jpg']
+const imageUrls = ['player.png', 'background.jpg', 'enemy.png']
 const images = []
 let imgCount = 0
 
@@ -28,6 +28,8 @@ class Player {
     constructor(x, y, velocity, maxSpeed, friction) {
         this.x = x
         this.y = y
+        this.width = 32
+        this.height = 32
         this.velocity = velocity
         this.maxSpeed = maxSpeed
         this.friction = friction
@@ -46,6 +48,7 @@ class Player {
         if (keys[37] || keys[65]) {
             // move left
             if (this.velocity > -this.maxSpeed)
+                // as long as we're not moving faster than our max, keep speeding up
                 this.velocity--
         }
 
@@ -53,6 +56,7 @@ class Player {
         if (keys[39] || keys[68]) {
             // move right
             if (this.velocity < this.maxSpeed)
+                // as long as we're not moving faster than our max, keep speeding up
                 this.velocity++
         }
 
@@ -69,6 +73,7 @@ class Player {
     }
 }
 
+// create the player obj
 let speed = 4
 let friction = 0.90
 const player = new Player(32, (canvas.height / 2) - 32, 0, speed, friction)
@@ -86,6 +91,8 @@ const animate = () => {
     // draw player
     player.draw()
     player.update()
+
+    c.drawImage(images[2], 100, 100)
 }
 
 // logic for knowing when a certain key is pressed/released
@@ -97,3 +104,5 @@ document.body.addEventListener('keydown', (e) => {
 document.body.addEventListener('keyup', (e) => {
     keys[e.keyCode] = false
 })
+
+// ram 24px width 18 height
