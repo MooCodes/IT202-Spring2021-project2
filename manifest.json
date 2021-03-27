@@ -6,7 +6,7 @@
     "theme_color": "#db4938",
     "icons": [
         {
-            "src": "/img/icons/icon.png",
+            "src": "./img/icons/icon.png",
             "type": "image/png", "sizes": "256x256"
         }
     ]
