@@ -1,6 +1,6 @@
 const cacheName = "ali-baig-it202-project2"
 const assets = [
-    "IT202-Spring2021-project2/index.html",
+    "IT202-Spring2021-project2/",
     "IT202-Spring2021-project2/index.js",
     "IT202-Spring2021-project2/img/background.jpg",
     "IT202-Spring2021-project2/img/benefit.png",
