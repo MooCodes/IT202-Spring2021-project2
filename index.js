@@ -6,7 +6,7 @@ canvas.width = innerWidth / 2
 canvas.height = innerHeight / 2
 
 // define & load in our game images
-const imageUrls = ['player.png', 'background.jpg', 'enemy.png']
+const imageUrls = ['player.png', 'background.jpg', 'enemy.png', 'benefit.png']
 const images = []
 let imgCount = 0
 
@@ -35,6 +35,7 @@ class Player {
         this.friction = friction
         this.lives = 3
         this.score = 0
+        this.level = 1
     }
 
     draw() {
@@ -97,21 +98,53 @@ class Enemy {
     }
 }
 
+class Benefit {
+    constructor(x, y, velocity, maxSpeed) {
+        this.x = x
+        this.y = y
+        this.width = 32
+        this.height = 32
+        this.velocity = velocity
+        this.maxSpeed = maxSpeed
+    }
+
+    draw() {
+        c.drawImage(images[3], this.x, this.y)
+    }
+
+    update() {
+        if (this.velocity > -this.maxSpeed)
+            this.velocity--
+
+        this.x += this.velocity
+    }
+}
+
 const player = new Player(32, (canvas.height / 2) - 32, 0, 6, 0.90)
 const enemies = []
+const benefits = []
 
 let spawnEnemyInterval
+let enemySpeed = 5
 const spawnEnemies = () => {
     // every second, spawn a new enemy virus
     spawnEnemyInterval = setInterval(() => {
-        enemies.push(new Enemy(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, 10))
-    }, 1000)
+        enemies.push(new Enemy(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, enemySpeed))
+    }, 500)
+}
+
+let benefitSpeed = 2
+const spawnBenefits = () => {
+    setInterval(() => {
+        benefits.push(new Benefit(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, benefitSpeed))
+    }, 2000)
 }
 
 // images have loaded, can start with game logic
 const playGame = () => {
     animate()
     spawnEnemies()
+    spawnBenefits()
 }
 
 // where we draw and update our game objects
@@ -122,7 +155,8 @@ const animate = () => {
     c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
     // draw score
     c.font = "32px Arial"
-    c.strokeText("Lives: " + player.lives, 10, 30)
+    let topLeftMsg = `Lives: ${player.lives} Score: ${player.score} Level: ${player.level}`
+    c.strokeText(topLeftMsg, 10, 30)
     // draw player
     player.draw()
     player.update()
@@ -135,9 +169,7 @@ const animate = () => {
         if (checkCollision(player.x, player.y, player.width, player.height,
             enemy.x, enemy.y, enemy.width, enemy.height)) {
             console.log('collision detected! remove enemy')
-                setTimeout(() => {
-                    enemies.splice(index, 1)
-                }, 0)
+            // remove enemy smoothly
 
             player.lives--
             if (player.lives === 0) {
@@ -145,6 +177,52 @@ const animate = () => {
                 c.strokeText("GAME OVER", canvas.width / 2 - 150, canvas.height / 2)
                 cancelAnimationFrame(animationId)
             }
+
+            setTimeout(() => {
+                enemies.splice(index, 1)
+            }, 0)
+        }
+
+        // don't want infinite # of enemies
+        // delete them when they're off the screen
+        if (enemy.x + enemy.width < 0) {
+            console.log('deleting enemy')
+            setTimeout(() => {
+                enemies.splice(index, 1)
+            }, 0)
+        }
+    })
+
+    benefits.forEach((benefit, index) => {
+        benefit.draw()
+        benefit.update()
+
+        // player collided with benefit
+        if (checkCollision(player.x, player.y, player.width, player.height,
+            benefit.x, benefit.y, benefit.width, benefit.height)) {
+            
+            // increment score
+            player.score += 10
+
+            if (player.score % 50 == 0) {
+                player.level++
+                enemySpeed *= 1.5
+                benefitSpeed *= 2
+            }
+
+            // delete the bene
+            setTimeout(() => {
+                benefits.splice(index, 1)
+            }, 0)
+        }
+
+        // don't want infinite # of enemies
+        // delete them when they're off the screen
+        if (benefit.x + benefit.width < 0) {
+            console.log('deleting enemy')
+            setTimeout(() => {
+                benefits.splice(index, 1)
+            }, 0)
         }
     })
 }
