@@ -1,6 +1,8 @@
 const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
+// updated
+
 // set the canvas width/height
 canvas.width = innerWidth / 2
 canvas.height = innerHeight / 2
