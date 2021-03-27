@@ -247,3 +247,12 @@ document.body.addEventListener('keyup', (e) => {
 function getRandomNum(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker
+            .register("/serviceWorker.js")
+            .then(res => console.log("service worker registered"))
+            .catch(err => console.log("service worker not registered", err));
+    });
+}
