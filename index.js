@@ -20,7 +20,8 @@ imageUrls.forEach(src => {
         if (imgCount == imageUrls.length) {
             // all images have been loaded
             // start the game
-            playGame()
+            init()
+            
         }
     }
     images.push(image)
@@ -123,8 +124,8 @@ class Benefit {
 }
 
 const player = new Player(32, (canvas.height / 2) - 32, 0, 6, 0.90)
-const enemies = []
-const benefits = []
+let enemies = []
+let benefits = []
 
 let spawnEnemyInterval
 let enemySpeed = 5
@@ -135,9 +136,10 @@ const spawnEnemies = () => {
     }, 500)
 }
 
+let benefitEnemyInterval
 let benefitSpeed = 2
 const spawnBenefits = () => {
-    setInterval(() => {
+    benefitEnemyInterval = setInterval(() => {
         benefits.push(new Benefit(canvas.width + 50, getRandomNum(0, canvas.height - 18), 0, benefitSpeed))
     }, 2000)
 }
@@ -147,6 +149,29 @@ const playGame = () => {
     animate()
     spawnEnemies()
     spawnBenefits()
+}
+
+const init = () => {
+    clearInterval(spawnEnemyInterval)
+    clearInterval(benefitEnemyInterval)
+    player.y = (canvas.height / 2) - 32
+    player.score = 0
+    player.lives = 3
+    player.level = 1
+    enemies = []
+    benefits = []
+    console.log(enemies)
+    console.log(benefits)
+    console.log('yoo')
+    // draw background
+    c.drawImage(images[1], 0, 0, canvas.width, canvas.height)
+    // draw score
+    c.font = "32px Arial"
+    let topLeftMsg = `Lives: ${player.lives} Score: ${player.score} Level: ${player.level}`
+    console.log(topLeftMsg)
+    c.strokeText(topLeftMsg, 10, 30)
+    // draw player
+    player.draw()
 }
 
 // where we draw and update our game objects
@@ -175,9 +200,14 @@ const animate = () => {
 
             player.lives--
             if (player.lives === 0) {
+                // game over
                 c.font = "64px Arial Bold"
                 c.strokeText("GAME OVER", canvas.width / 2 - 150, canvas.height / 2)
                 cancelAnimationFrame(animationId)
+                setTimeout(() => {
+                    startScreen.style = "display: show;"
+                    canvas.style = "display: none;"
+                }, 3000)
             }
 
             setTimeout(() => {
@@ -206,7 +236,7 @@ const animate = () => {
             // increment score
             player.score += 10
 
-            if (player.score % 50 == 0) {
+            if (player.score % 100 == 0) {
                 player.level++
                 enemySpeed *= 1.5
                 benefitSpeed *= 2
@@ -244,6 +274,15 @@ document.body.addEventListener('keydown', (e) => {
 })
 document.body.addEventListener('keyup', (e) => {
     keys[e.keyCode] = false
+})
+
+let startBtn = document.querySelector("#StartButton")
+let startScreen = document.querySelector("#StartScreen")
+startBtn.addEventListener("click", () => {
+    init()
+    playGame()
+    startScreen.style = "display: none;"
+    canvas.style = "display: show;"
 })
 
 function getRandomNum(min, max) {

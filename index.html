@@ -8,15 +8,36 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="icons" type="image/png" sizes="144x144" href="/img/icons/icon.png">
     <style>
-        body {
-            margin: 0;
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        h1, p {
+            text-align: center;
+        }
+        input {
+            position: absolute;
+            top: 15%;
+        }
+        #StartScreen {
+            text-align: center;
         }
     </style>
     <meta name="apple-mobile-web-app-status-bar" content="#db4938" />
     <meta name="theme-color" content="#db4938" />
 </head>
 <body>
-    <canvas></canvas>
+    <div id="StartScreen">
+        <h1>Avoid The Viruses</h1>
+        <p>Don't get hit by the flying viruses indicated by their yellow styled computer chips.<br>
+        If you happen to see a purple computer chip, make sure to eat it for points!
+        </p>
+        <input id="StartButton" type="button" value="Start">
+    </div>
+    <canvas style="display: none;"></canvas>
     <script src="./index.js"></script>
 </body>
 </html>
